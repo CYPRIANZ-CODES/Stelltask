@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String        @id @default(cuid())
+  email             String        @unique
+  emailVerified     Boolean       @default(false)
+  passwordHash      String?
+  githubId          String?       @unique
+  githubUsername    String?
+  stellarPublicKey  String?       @unique
+  role              Role          @default(CONTRIBUTOR)
+  trustScore        Float         @default(50.0)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  profile           UserProfile?
+  tasksCreated      Task[]        @relation("TaskCreator")
+  tasksAssigned     Task[]        @relation("TaskAssignee")
+  submissions       Submission[]
+  reviews           Review[]
+}
+
+model UserProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  displayName     String
+  bio             String?
+  avatarUrl       String?
+  skills          String[]
+  totalEarned     Float     @default(0.0)
+}
+
+model Task {
+  id                String        @id @default(cuid())
+  title             String
+  description       String        @db.Text
+  status            TaskStatus    @default(DRAFT)
+  rewardXLM         Float
+  escrowPublicKey   String?
+  fundingTxHash     String?
+  deadlineAt        DateTime
+  
+  creatorId         String
+  creator           User          @relation("TaskCreator", fields: [creatorId], references: [id])
+  assigneeId        String?
+  assignee          User?         @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  
+  submissions       Submission[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model Submission {
+  id              String          @id @default(cuid())
+  taskId          String
+  task            Task            @relation(fields: [taskId], references: [id])
+  contributorId   String
+  contributor     User            @relation(fields: [contributorId], references: [id])
+  status          SubmissionStatus @default(PENDING)
+  submissionUrl   String
+  description     String          @db.Text
+  reviews         Review[]
+  createdAt       DateTime        @default(now())
+}
+
+model Review {
+  id            String        @id @default(cuid())
+  submissionId  String
+  submission    Submission    @relation(fields: [submissionId], references: [id])
+  reviewerId    String
+  reviewer      User          @relation(fields: [reviewerId], references: [id])
+  verdict       ReviewVerdict
+  feedback      String        @db.Text
+  createdAt     DateTime      @default(now())
+}
+
+enum Role {
+  CONTRIBUTOR
+  TASK_OWNER
+  ADMIN
+}
+
+enum TaskStatus {
+  DRAFT
+  FUNDING
+  OPEN
+  ASSIGNED
+  IN_REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ReviewVerdict {
+  APPROVED
+  REVISION_REQUESTED
+  REJECTED
+}
