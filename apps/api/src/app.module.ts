@@ -4,6 +4,8 @@ import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AdminModule } from './admin/admin.module';
+import { HackathonsModule } from './hackathons/hackathons.module';
+import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { AdminModule } from './admin/admin.module';
     TasksModule,
     PaymentsModule,
     AdminModule,
+    HackathonsModule,
+    WalletModule,
   ],
 })
 export class AppModule {}

@@ -1,0 +1,254 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 250 95% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 250 95% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 250 95% 60%;
+    --radius: 0.5rem;
+    --bg-page: #05060f;
+    --text-main: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+  }
+  
+  html.light {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 250 95% 60%;
+    --bg-page: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: rgba(15, 23, 42, 0.6);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply text-foreground;
+    background-color: var(--bg-page);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  html.light body {
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+  html.light .text-white {
+    color: #0f172a !important;
+  }
+  html.light .text-white\/50 {
+    color: rgba(15, 23, 42, 0.5) !important;
+  }
+  html.light .text-white\/60 {
+    color: rgba(15, 23, 42, 0.6) !important;
+  }
+  html.light .text-white\/70 {
+    color: rgba(15, 23, 42, 0.7) !important;
+  }
+  html.light .text-white\/80 {
+    color: rgba(15, 23, 42, 0.8) !important;
+  }
+  html.light .bg-[#05060f],
+  html.light .bg-[#0a0a0a],
+  html.light .bg-[#0a0a12],
+  html.light .bg-[#07080f],
+  html.light .bg-[#04040a],
+  html.light .bg-[#0b0b13],
+  html.light .bg-[#09090f],
+  html.light .bg-[#05060f]\/90,
+  html.light .bg-[#05060f]\/80 {
+    background-color: #f8fafc !important;
+  }
+  html.light .bg-white\/5 {
+    background-color: rgba(15, 23, 42, 0.05) !important;
+  }
+  html.light .bg-white\/10 {
+    background-color: rgba(15, 23, 42, 0.1) !important;
+  }
+  html.light .bg-white\/15 {
+    background-color: rgba(15, 23, 42, 0.15) !important;
+  }
+  html.light .border-white\/10 {
+    border-color: rgba(15, 23, 42, 0.1) !important;
+  }
+  html.light .text-violet-300 {
+    color: #7c3aed !important;
+  }
+  html.light .bg-violet-500\/15 {
+    background-color: rgba(124, 58, 237, 0.15) !important;
+  }
+}
+
+/* Custom Animations - GPU accelerated */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, -30px) scale(1.05); }
+  50% { transform: translate(-10px, -50px) scale(0.95); }
+  75% { transform: translate(15px, -20px) scale(1.02); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-30px, 20px) scale(1.03); }
+  66% { transform: translate(25px, -30px) scale(0.97); }
+}
+
+@keyframes float-fast {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(40px, -40px) rotate(180deg); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-float-slow {
+  animation: float-slow 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-medium {
+  animation: float-medium 15s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-fast {
+  animation: float-fast 10s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-gradient {
+  animation: gradient-shift 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-3000 {
+  animation-delay: 3s;
+}
+
+/* Fade animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out forwards;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+/* Scroll lock for modals */
+body.scroll-locked {
+  overflow: hidden;
+}
+
+/* Dark-only elements hidden in light mode */
+html.light .dark-only {
+  display: none !important;
+}

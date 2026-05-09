@@ -1,175 +1,166 @@
+import { ArrowRight, Wallet } from 'lucide-react';
+import GlobeAnimation from '@/components/GlobeAnimation';
+
 export default function LandingPage() {
   return (
-    <main className="overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-32 px-4 bg-white">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none overflow-hidden opacity-20">
-          <div className="absolute top-20 left-1/4 w-96 h-96 bg-blue-400 rounded-full blur-[128px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full blur-[128px]" />
-        </div>
-        
-        <div className="max-w-5xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-semibold mb-8 animate-fade-in">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
-            </span>
-            Stellar Testnet Beta Live
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
-            The Protocol for <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Open-Source Work</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            A decentralized work marketplace where every task is protected by Stellar escrows. 
-            No middleman, no delays—just verifiable code for verifiable rewards.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 hover:scale-[1.02] transition-all shadow-lg shadow-blue-200">
-              Start Contributing
-            </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-white text-slate-900 border-2 border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all">
-              Post a Task
-            </button>
-          </div>
-          
-          <div className="mt-20 pt-10 border-t border-slate-100 grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-bold text-slate-900">500+</span>
-              <span className="text-sm text-slate-500 font-medium">Verified Tasks</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-bold text-slate-900">12M+</span>
-              <span className="text-sm text-slate-500 font-medium">XLM Disbursed</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-bold text-slate-900">1.2k</span>
-              <span className="text-sm text-slate-500 font-medium">Active Contributors</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-3xl font-bold text-slate-900">98%</span>
-              <span className="text-sm text-slate-500 font-medium">Approval Rate</span>
-            </div>
-          </div>
-        </div>
-      </section>
+    <main className="min-h-screen bg-[var(--bg-page)] text-[var(--text-main)]">
+      <section className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 bg-[var(--bg-page)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,79,255,0.18),transparent_28%)] pointer-events-none dark-only" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(34,211,238,0.12),transparent_25%)] pointer-events-none dark-only" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgba(0,0,0,0.2),transparent_42%)] pointer-events-none dark-only" />
 
-      {/* How it Works */}
-      <section className="py-24 bg-slate-50 border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Fair. Fast. Final.</h2>
-            <p className="text-slate-600">The journey from "Issue" to "Paid" on the Stellar blockchain.</p>
-          </div>
-          
-          <div className="grid md:grid-cols-4 gap-8 relative">
-            <div className="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-blue-200" />
-            
-            {[
-              { title: "Connect", desc: "Link your Stellar wallet and GitHub profile to verify your identity.", step: 1 },
-              { title: "Claim", desc: "Browse open tasks and join the fair-assignment queue based on your score.", step: 2 },
-              { title: "Build", desc: "Submit your work via Pull Request. Funds are already locked in escrow.", step: 3 },
-              { title: "Earn", desc: "Once approved, XLM is instantly released to your wallet via smart contract.", step: 4 },
-            ].map((s) => (
-              <div key={s.step} className="relative bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-xl mb-6 relative z-10 shadow-md">
-                  {s.step}
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{s.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{s.desc}</p>
+        <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-8 lg:px-8">
+          <div className="grid flex-1 items-center gap-12 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+            <div className="max-w-2xl space-y-8">
+              <div className="inline-flex items-center gap-2 rounded-tl-[1.5rem] rounded-tr-none rounded-br-[1.5rem] rounded-bl-none border border-[var(--text-main)]/10 bg-[var(--text-main)]/5 px-5 py-3 text-xs font-bold uppercase tracking-[0.3em] text-[var(--text-main)]/80 backdrop-blur-sm transition hover:bg-[var(--text-main)]/10">
+                <span className="h-2 w-2 rounded-full bg-violet-500 animate-pulse shadow-[0_0_10px_rgba(139,92,246,0.5)]" />
+                Stellar-native public goods funding
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Features */}
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8">Built for the <br /> <span className="text-blue-600">Stellar Ecosystem</span></h2>
-            <div className="space-y-8">
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 text-blue-600">
-                  🛡️
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold mb-1">Escrow-Protected Rewards</h4>
-                  <p className="text-slate-600 text-sm">Every task is funded upfront. No more chasing payments or hoping the budget exists. If you build it, you get paid.</p>
-                </div>
+              <h1 className="text-5xl font-semibold leading-tight tracking-tight text-[var(--text-main)] sm:text-6xl xl:text-7xl">
+                The fastest on-chain route from wallet to open-source funding.
+              </h1>
+
+              <p className="max-w-xl text-lg leading-8 text-[var(--text-muted)] sm:text-xl">
+                Discover and support tasks, RetroPGF rounds, and dependency funding on Stellar using a sleek, modern interface that feels effortless.
+              </p>
+
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                <a href="/explore" className="inline-flex items-center justify-center rounded-tl-[1.5rem] rounded-tr-none rounded-br-[1.5rem] rounded-bl-none bg-[var(--text-main)] px-6 py-4 text-sm font-semibold text-[var(--bg-page)] transition hover:opacity-90">
+                  Explore opportunities
+                  <ArrowRight className="ml-3 h-4 w-4" />
+                </a>
+                <a href="#trusted" className="rounded-tl-[1.5rem] rounded-tr-none rounded-br-[1.5rem] rounded-bl-none border border-[var(--text-main)]/10 px-6 py-4 text-sm text-[var(--text-muted)] transition hover:border-[var(--text-main)]/20 hover:text-[var(--text-main)]">
+                  Built for public goods
+                </a>
               </div>
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 text-purple-600">
-                  📈
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold mb-1">Trust Score Reputation</h4>
-                  <p className="text-slate-600 text-sm">Your performance creates your future. Build your score to unlock high-value Soroban tasks and priority assignment.</p>
-                </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  { title: 'Instant setup', subtitle: 'Connect a wallet and start funding.' },
+                  { title: 'Low fees', subtitle: 'Stellar costs cents per transaction.' },
+                  { title: 'Open growth', subtitle: 'Fund dependencies and communities.' },
+                ].map((item) => (
+                  <div key={item.title} className="rounded-3xl border border-[var(--text-main)]/10 bg-[var(--text-main)]/5 p-5">
+                    <p className="text-xl font-semibold text-[var(--text-main)]">{item.title}</p>
+                    <p className="mt-2 text-sm text-[var(--text-muted)]">{item.subtitle}</p>
+                  </div>
+                ))}
               </div>
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 text-green-600">
-                  ⚡
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold mb-1">Soroban Smart Contracts</h4>
-                  <p className="text-slate-600 text-sm">Automated release logic. No human intervention needed once criteria are met. Native speed, native security.</p>
-                </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[2rem] border border-[var(--text-main)]/10 bg-[var(--bg-page)]/90 shadow-2xl shadow-violet-900/20">
+              <div className="absolute inset-0 bg-[var(--text-main)]/10" />
+              <GlobeAnimation />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--bg-page)] to-transparent px-6 py-5 text-[var(--text-muted)]">
+                <div className="text-xs uppercase tracking-[0.35em] text-[var(--text-muted)]">Network growth</div>
+                <p className="mt-2 text-lg font-semibold text-[var(--text-main)]">Scaled community funding, visualized.</p>
               </div>
             </div>
           </div>
-          <div className="relative">
-            <div className="aspect-square bg-slate-100 rounded-3xl overflow-hidden border border-slate-200 relative shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent" />
-              {/* Mock Dashboard UI Snippet */}
-              <div className="p-8">
-                <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-6">
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <h5 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Active Task</h5>
-                      <h3 className="text-xl font-bold text-slate-900">Implement SEP-24 Auth</h3>
-                    </div>
-                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Escrow Funded</span>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full w-2/3 bg-blue-600 rounded-full" />
-                    </div>
-                    <div className="flex justify-between text-xs font-bold text-slate-500">
-                      <span>Reward: 5,000 XLM</span>
-                      <span>Progress: 65%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Floating Element */}
-            <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4 animate-bounce">
-              <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white text-lg font-bold">✓</div>
+
+          <div id="trusted" className="rounded-[2rem] border border-[var(--text-main)]/10 bg-[var(--text-main)]/5 p-6 text-[var(--text-muted)] md:p-8">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase">Payment Released</p>
-                <p className="text-sm font-bold text-slate-900">+500.00 USDC</p>
+                <p className="text-xs uppercase tracking-[0.35em] text-[var(--text-muted)]">Trusted by</p>
+                <p className="mt-2 text-2xl font-semibold text-[var(--text-main)]">Open-source teams and DAO builders.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {['ens', 'Stellar', 'Filecoin', 'Unicef'].map((name) => (
+                  <div key={name} className="rounded-3xl bg-[var(--bg-page)] border border-[var(--text-main)]/5 px-4 py-3 text-center text-xs uppercase tracking-[0.25em] text-[var(--text-muted)]">
+                    {name}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-4 bg-blue-600">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h2 className="text-4xl font-bold mb-6">Ready to scale your <br /> open-source project?</h2>
-          <p className="text-blue-100 text-lg mb-10 opacity-90">
-            Join the decentralized workforce building on Stellar. 
-            Automate your bounty management and attract top talent today.
-          </p>
-          <button className="px-10 py-5 bg-white text-blue-600 rounded-2xl font-bold text-xl hover:bg-slate-50 hover:scale-[1.05] transition-all shadow-xl">
-            Register Repository
-          </button>
-          <p className="mt-8 text-sm text-blue-200">No upfront platform fees. Pay only when work is approved.</p>
+      <section className="border-t border-[var(--text-main)]/10 bg-[var(--bg-page)] px-4 py-20 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-3">
+          {[
+            { title: 'Stream payments', text: 'Create continuous on-chain flows with a few clicks.' },
+            { title: 'Fund contributors', text: 'Reward open-source work and dependencies directly.' },
+            { title: 'Run RetroPGF', text: 'Launch rounds that distribute funding transparently.' },
+          ].map((card) => (
+            <div key={card.title} className="rounded-[1.75rem] border border-[var(--text-main)]/10 bg-[var(--text-main)]/5 p-8 text-[var(--text-muted)] shadow-xl shadow-black/20">
+              <h3 className="text-2xl font-semibold text-[var(--text-main)]">{card.title}</h3>
+              <p className="mt-4 text-sm leading-7 text-[var(--text-muted)]">{card.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="border-t border-[var(--text-main)]/10 bg-[var(--bg-page)] px-4 py-20 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="rounded-[2rem] border border-[var(--text-main)]/10 bg-gradient-to-br from-[var(--text-main)]/5 to-[var(--text-main)]/2 p-8 lg:p-12">
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 rounded-tl-[1.5rem] rounded-tr-none rounded-br-[1.5rem] rounded-bl-none border border-[var(--text-main)]/10 bg-[var(--text-main)]/5 px-5 py-3 text-xs font-bold uppercase tracking-[0.3em] text-[var(--text-main)]/80">
+                  <span className="h-2 w-2 rounded-full bg-violet-500 animate-pulse" />
+                  Mini tasks ecosystem
+                </div>
+
+                <h2 className="text-4xl font-semibold leading-tight text-[var(--text-main)] lg:text-5xl">
+                  Launch micro-projects for developers
+                </h2>
+
+                <p className="text-lg leading-8 text-[var(--text-muted)]">
+                  Individuals and organizations can post mini-tasks and instantly connect with developers. Set your budget, define requirements, and pay directly through Stellar with transparent, secure transactions.
+                </p>
+
+                <ul className="space-y-4 text-[var(--text-muted)]">
+                  <li className="flex gap-3 items-start">
+                    <div className="mt-1.5 h-2 w-2 rounded-full bg-violet-500 flex-shrink-0" />
+                    <span className="text-sm">Post mini-tasks with clear deliverables</span>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="mt-1.5 h-2 w-2 rounded-full bg-violet-500 flex-shrink-0" />
+                    <span className="text-sm">Browse skilled developers and their portfolios</span>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="mt-1.5 h-2 w-2 rounded-full bg-violet-500 flex-shrink-0" />
+                    <span className="text-sm">Pay securely with blockchain escrow</span>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <div className="mt-1.5 h-2 w-2 rounded-full bg-violet-500 flex-shrink-0" />
+                    <span className="text-sm">Build your reputation as a task creator or developer</span>
+                  </li>
+                </ul>
+
+                <a href="/tasks" className="inline-flex items-center justify-center rounded-tl-[1.5rem] rounded-tr-none rounded-br-[1.5rem] rounded-bl-none bg-[var(--text-main)] px-6 py-3 text-sm font-semibold text-[var(--bg-page)] transition hover:opacity-90">
+                  Post your first task
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
+              </div>
+
+              <div className="relative overflow-hidden rounded-[1.75rem] border border-[var(--text-main)]/10 bg-[var(--bg-page)]/50 p-8 shadow-xl shadow-black/10">
+                <div className="space-y-6">
+                  <div className="rounded-[1.25rem] border border-[var(--text-main)]/10 bg-[var(--bg-page)]/80 p-5">
+                    <p className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)] font-semibold mb-2">For Task Creators</p>
+                    <ul className="space-y-2 text-sm text-[var(--text-muted)]">
+                      <li>✓ Define scope and budget</li>
+                      <li>✓ Review proposals</li>
+                      <li>✓ Track progress in real-time</li>
+                      <li>✓ Release payment on completion</li>
+                    </ul>
+                  </div>
+
+                  <div className="rounded-[1.25rem] border border-[var(--text-main)]/10 bg-[var(--bg-page)]/80 p-5">
+                    <p className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)] font-semibold mb-2">For Developers</p>
+                    <ul className="space-y-2 text-sm text-[var(--text-muted)]">
+                      <li>✓ Browse verified opportunities</li>
+                      <li>✓ Bid on tasks that match your skills</li>
+                      <li>✓ Earn crypto directly</li>
+                      <li>✓ Build your on-chain portfolio</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>

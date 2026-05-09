@@ -1593,6 +1593,383 @@ const PRICE_CACHE_KEY = `xlm:usd:price`;
 
 ---
 
+## MILESTONE 3 — PHASE 15: Hackathon Platform
+
+### Overview
+Enable any user or organization to run hackathons on the platform. Participants submit projects, judges review and score them, and winners receive on-chain payouts automatically. Full voting, ranking, and prize distribution on Stellar.
+
+---
+
+### Epic 15.1 — Hackathon Data Models
+
+```prisma
+model Hackathon {
+  id                String              @id @default(cuid())
+  title             String
+  description       String              @db.Text
+  shortDescription  String?             // For card previews
+  bannerImageUrl    String?
+  status            HackathonStatus     @default(DRAFT)
+  prizePoolXLM      Float               // Total XLM prize pool
+  registrationStart DateTime
+  registrationEnd   DateTime
+  submissionStart   DateTime
+  submissionEnd     DateTime
+  votingStart       DateTime?
+  votingEnd         DateTime?
+  announcementDate  DateTime?           // When winners announced
+  
+  // Configuration
+  maxParticipants   Int?                // Unlimited if null
+  maxTeamSize       Int                 @default(5)
+  allowTeamProjects Boolean             @default(true)
+  requireRegistration Boolean            @default(true)
+  judgingCriteria   Json                // Array of criteria with weights
+  
+  // Organizer
+  organizerId       String
+  organizer         User                @relation("HackathonOrganizer", fields: [organizerId], references: [id])
+  
+  // Relations
+  projects          HackathonProject[]
+  judges            HackathonJudge[]
+  participants      HackathonParticipant[]
+  prizeDistribution PrizeDistribution[]
+  
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  publishedAt       DateTime?
+
+  @@index([status])
+  @@index([registrationStart, registrationEnd])
+}
+
+model HackathonProject {
+  id              String                  @id @default(cuid())
+  hackathonId     String
+  hackathon       Hackathon               @relation(fields: [hackathonId], references: [id])
+  title           String
+  description     String                  @db.Text
+  demoUrl         String?
+  repoUrl         String?
+  videoUrl        String?                 // Demo video link
+  screenshots     String[]                // Array of image URLs
+  techStack       String[]                // Technologies used
+  
+  // Team
+  submittedBy     String
+  submitter       User                    @relation("ProjectSubmitter", fields: [submittedBy], references: [id])
+  teamMembers     HackathonTeamMember[]
+  
+  // Scoring
+  totalScore      Float                   @default(0)
+  rank            Int?
+  
+  // Status
+  status          ProjectStatus           @default(DRAFT)
+  isPublic        Boolean                 @default(false)
+  
+  submissions     ProjectSubmission[]
+  reviews         ProjectReview[]
+  
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+  submittedAt     DateTime?
+
+  @@index([hackathonId, status])
+  @@index([submittedBy])
+}
+
+model HackathonTeamMember {
+  id          String            @id @default(cuid())
+  projectId   String
+  project     HackathonProject  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User              @relation(fields: [userId], references: [id])
+  role        TeamRole          @default(MEMBER)
+  joinedAt    DateTime          @default(now())
+
+  @@unique([projectId, userId])
+}
+
+model ProjectSubmission {
+  id              String            @id @default(cuid())
+  projectId       String
+  project         HackathonProject  @relation(fields: [projectId], references: [id])
+  version         Int               @default(1)
+  submissionNotes String            @db.Text
+  submissionUrl   String           // PR, demo link, or deployment
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([projectId])
+}
+
+model ProjectReview {
+  id              String            @id @default(cuid())
+  projectId       String
+  project         HackathonProject  @relation(fields: [projectId], references: [id])
+  judgeId         String
+  judge           User              @relation(fields: [judgeId], references: [id])
+  
+  // Scoring
+  criteriaScores  Json              // { criterionId: score, note: string }
+  totalScore      Float
+  feedback        String            @db.Text
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@unique([projectId, judgeId])
+}
+
+model HackathonJudge {
+  id          String    @id @default(cuid())
+  hackathonId String
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  isLead      Boolean   @default(false)
+  
+  createdAt   DateTime  @default(now())
+
+  @@unique([hackathonId, userId])
+}
+
+model HackathonParticipant {
+  id          String    @id @default(cuid())
+  hackathonId String
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  registeredAt DateTime @default(now())
+
+  @@unique([hackathonId, userId])
+}
+
+model PrizeDistribution {
+  id          String            @id @default(cuid())
+  hackathonId String
+  hackathon   Hackathon         @relation(fields: [hackathonId], references: [id])
+  rank        Int               // 1st, 2nd, 3rd, etc.
+  prizeXLM    Float
+  projectId   String?           // Null until winners announced
+  project     HackathonProject? @relation(fields: [projectId], references: [id])
+  paidOut     Boolean           @default(false)
+  txHash      String?
+  
+  createdAt   DateTime          @default(now())
+  paidAt      DateTime?
+
+  @@index([hackathonId, rank])
+}
+
+enum HackathonStatus {
+  DRAFT           // Created but not published
+  PUBLISHED       // Live, registration open
+  REGISTRATION_CLOSED // Registration ended, submission phase
+  SUBMISSION_OPEN // Participants can submit
+  SUBMISSION_CLOSED // Submission period ended
+  VOTING_OPEN     // Judges voting
+  VOTING_CLOSED   // Voting ended
+  WINNERS_ANNOUNCED // Results published
+  CANCELLED       // Cancelled by organizer
+}
+
+enum ProjectStatus {
+  DRAFT           // Not yet submitted
+  SUBMITTED       // Submitted to hackathon
+  UNDER_REVIEW    // Being reviewed by judges
+  REVIEWED        // All reviews complete
+  WITHDRAWN       // Withdrawn by participant
+  DISQUALIFIED    // Disqualified by organizer
+}
+
+enum TeamRole {
+  LEAD            // Team captain
+  MEMBER          // Regular team member
+}
+```
+
+---
+
+### Epic 15.2 — Hackathon Service (NestJS)
+
+```typescript
+// hackathons.service.ts
+
+async createHackathon(organizerId: string, dto: CreateHackathonDto): Promise<Hackathon> {
+  // 1. Verify organizer has TASK_OWNER or ADMIN role
+  // 2. Validate dates: registrationStart < registrationEnd < submissionStart < submissionEnd
+  // 3. Validate prizePoolXLM >= 10 XLM minimum
+  // 4. Validate judgingCriteria structure (must have weights summing to 100)
+  // 5. Create hackathon in DRAFT status
+  // 6. Create escrow account for prize pool
+  return hackathon;
+}
+
+async publishHackathon(hackathonId: string, organizerId: string): Promise<EscrowInfo> {
+  // 1. Verify hackathon is DRAFT and belongs to organizer
+  // 2. Verify all required fields are complete
+  // 3. Generate Stellar escrow for prize pool
+  // 4. Return escrow public key for organizer to fund
+  // 5. Set status to PUBLISHED
+}
+
+async confirmFunding(hackathonId: string, txHash: string): Promise<void> {
+  // 1. Verify Stellar payment to escrow account
+  // 2. Verify amount matches prizePoolXLM
+  // 3. Set publishedAt timestamp
+}
+
+async registerParticipant(hackathonId: string, userId: string): Promise<void> {
+  // 1. Verify hackathon is in PUBLISHED or REGISTRATION_CLOSED status
+  // 2. Verify registration window is open
+  // 3. Verify maxParticipants not exceeded
+  // 4. Create HackathonParticipant record
+}
+
+async submitProject(userId: string, hackathonId: string, dto: SubmitProjectDto): Promise<HackathonProject> {
+  // 1. Verify hackathon is in SUBMISSION_OPEN status
+  // 2. Verify user is registered participant
+  // 3. Validate submission URLs are reachable
+  // 4. Create HackathonProject with team members
+  // 5. Set status to SUBMITTED, submittedAt timestamp
+}
+
+async reviewProject(judgeId: string, projectId: string, dto: ReviewProjectDto): Promise<void> {
+  // 1. Verify judge is assigned to this hackathon
+  // 2. Verify project is SUBMITTED or UNDER_REVIEW
+  // 3. Validate criteria scores are within range
+  // 4. Calculate totalScore from weighted criteria
+  // 5. Create ProjectReview record
+  // 6. Update project status to REVIEWED if all judges reviewed
+}
+
+async calculateWinners(hackathonId: string): Promise<PrizeDistribution[]> {
+  // 1. Verify hackathon is in VOTING_CLOSED status
+  // 2. Load all reviewed projects with their average scores
+  // 3. Rank projects by totalScore (descending)
+  // 4. Assign prize distribution based on rank
+  // 5. Update project rank fields
+  // 6. Return prize distribution for organizer review
+}
+
+async announceWinners(hackathonId: string, organizerId: string): Promise<void> {
+  // 1. Verify organizer authority
+  // 2. Set hackathon status to WINNERS_ANNOUNCED
+  // 3. Trigger automatic payouts to winners via Stellar
+  // 4. Update PrizeDistribution.paidOut = true
+  // 5. Send notifications to all participants
+}
+```
+
+---
+
+### Epic 15.3 — Hackathon API Endpoints
+
+```
+POST   /hackathons                      Create hackathon (TASK_OWNER, ADMIN)
+PATCH  /hackathons/:id                  Update hackathon (organizer only, DRAFT only)
+DELETE /hackathons/:id                  Cancel hackathon (organizer only)
+POST   /hackathons/:id/publish          Publish hackathon (triggers escrow)
+POST   /hackathons/:id/fund             Confirm prize pool funding
+
+GET    /hackathons                      List hackathons (public)
+GET    /hackathons/:id                  Get hackathon detail (public)
+GET    /hackathons/:id/projects         List submitted projects (public during voting)
+
+POST   /hackathons/:id/register         Register as participant
+DELETE /hackathons/:id/register         Withdraw registration
+
+POST   /hackathons/:id/projects         Submit project (participants only)
+PATCH  /hackathons/:id/projects/:pid    Update project (before submission deadline)
+
+POST   /hackathons/:id/judges           Add judge (organizer only)
+DELETE /hackathons/:id/judges/:jid      Remove judge (organizer only)
+
+POST   /hackathons/:id/projects/:pid/review Review project (judges only)
+GET    /hackathons/:id/projects/:pid/reviews Get all reviews for project
+
+POST   /hackathons/:id/calculate-winners Calculate and preview winners
+POST   /hackathons/:id/announce-winners Announce winners and trigger payouts
+```
+
+---
+
+### Epic 15.4 — Hackathon Frontend (Next.js)
+
+**Pages to Build:**
+
+**`/hackathons` — Hackathon Discovery**
+- Grid of hackathon cards (title, dates, prize pool, status badge)
+- Filter: upcoming, active, voting, completed
+- Search by title or organizer
+- "Create Hackathon" button for TASK_OWNER+ users
+
+**`/hackathons/[id]` — Hackathon Detail**
+- Banner image, title, description
+- Timeline: registration → submission → voting → results
+- Prize pool breakdown (1st, 2nd, 3rd place)
+- Judging criteria displayed
+- Register/Submit Project buttons (based on status)
+- Projects grid (visible when voting closed or results announced)
+
+**`/hackathons/create` — Create Hackathon**
+- Multi-step form:
+  1. Basic info (title, description, banner)
+  2. Dates (registration, submission, voting windows)
+  3. Prize pool (total XLM, distribution tiers)
+  4. Judging criteria (add criteria with weights)
+  5. Review & publish
+- Prize pool calculator with live USD conversion
+- Date validation (no overlaps, minimum durations)
+
+**`/hackathons/[id]/submit` — Project Submission**
+- Project title and description
+- Team member management (add by email or username)
+- Tech stack tags
+- Demo URL, repo URL, video URL
+- Screenshots upload (max 5 images)
+- Submission preview before final submit
+
+**`/hackathons/[id]/judge` — Judge Dashboard**
+- List of assigned projects to review
+- Scoring interface with criteria sliders
+- Feedback text area
+- Auto-calculation of total score
+- Save draft review, submit when complete
+- View other judges' scores (after voting closes)
+
+---
+
+### Epic 15.5 — Prize Distribution Logic
+
+```typescript
+// prize-distribution.service.ts
+
+interface PrizeTier {
+  rank: number;
+  percentage: number; // e.g., 1st: 50%, 2nd: 30%, 3rd: 15%, 4th-10th: 0.5% each
+}
+
+async distributePrizes(hackathonId: string): Promise<PayoutResult[]> {
+  // 1. Load hackathon and prize pool
+  // 2. Load ranked projects
+  // 3. Calculate prize amounts based on tier percentages
+  // 4. Build Stellar transaction:
+  //    - For each winner: payment operation
+  //    - Platform fee: 2.5% of total pool
+  //    - Refund remainder to organizer
+  // 5. Submit transaction
+  // 6. Record PayoutTransaction for each winner
+  // 7. Update PrizeDistribution records with txHash
+}
+```
+
+---
+
 ## MILESTONE 3 — DELIVERABLES CHECKLIST
 
 - [ ] Stellar ecosystem task type taxonomy with skill tagging
@@ -1615,6 +1992,12 @@ const PRICE_CACHE_KEY = `xlm:usd:price`;
 - [ ] Security audit: OWASP Top 10 reviewed
 - [ ] Rate limiting on all API endpoints (per-user + per-IP)
 - [ ] GDPR compliance: data export and account deletion flows
+- [ ] **Hackathon platform: create, manage, and participate in hackathons**
+- [ ] **Project submission with team management**
+- [ ] **Judge scoring system with weighted criteria**
+- [ ] **Automatic prize distribution to winners**
+- [ ] **Hackathon discovery and listing pages**
+- [ ] **Winner announcement with on-chain payouts**
 
 ---
 

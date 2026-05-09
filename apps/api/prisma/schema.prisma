@@ -25,6 +25,12 @@ model User {
   tasksAssigned     Task[]        @relation("TaskAssignee")
   submissions       Submission[]
   reviews           Review[]
+  hackathonsOrganized Hackathon[] @relation("HackathonOrganizer")
+  projectsSubmitted HackathonProject[] @relation("ProjectSubmitter")
+  hackathonTeamMembers HackathonTeamMember[]
+  hackathonReviews ProjectReview[]
+  hackathonsJudged HackathonJudge[]
+  hackathonsParticipated HackathonParticipant[]
 }
 
 model UserProfile {
@@ -94,8 +100,11 @@ enum TaskStatus {
   OPEN
   ASSIGNED
   IN_REVIEW
+  REVISION_REQUESTED
   COMPLETED
+  DISPUTED
   CANCELLED
+  EXPIRED
 }
 
 enum SubmissionStatus {
@@ -108,4 +117,172 @@ enum ReviewVerdict {
   APPROVED
   REVISION_REQUESTED
   REJECTED
+}
+
+// Hackathon Models
+model Hackathon {
+  id                String              @id @default(cuid())
+  title             String
+  description       String              @db.Text
+  shortDescription  String?
+  bannerImageUrl    String?
+  status            HackathonStatus     @default(DRAFT)
+  prizePoolXLM      Float
+  registrationStart DateTime
+  registrationEnd   DateTime
+  submissionStart   DateTime
+  submissionEnd     DateTime
+  votingStart       DateTime?
+  votingEnd         DateTime?
+  announcementDate  DateTime?
+  maxParticipants   Int?
+  maxTeamSize       Int                 @default(5)
+  allowTeamProjects Boolean             @default(true)
+  requireRegistration Boolean            @default(true)
+  judgingCriteria   Json
+  organizerId       String
+  organizer         User                @relation("HackathonOrganizer", fields: [organizerId], references: [id])
+  projects          HackathonProject[]
+  judges            HackathonJudge[]
+  participants      HackathonParticipant[]
+  prizeDistribution PrizeDistribution[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  publishedAt       DateTime?
+
+  @@index([status])
+  @@index([registrationStart, registrationEnd])
+}
+
+model HackathonProject {
+  id              String                  @id @default(cuid())
+  hackathonId     String
+  hackathon       Hackathon               @relation(fields: [hackathonId], references: [id])
+  title           String
+  description     String                  @db.Text
+  demoUrl         String?
+  repoUrl         String?
+  videoUrl        String?
+  screenshots     String[]
+  techStack       String[]
+  submittedBy     String
+  submitter       User                    @relation("ProjectSubmitter", fields: [submittedBy], references: [id])
+  teamMembers     HackathonTeamMember[]
+  totalScore      Float                   @default(0)
+  rank            Int?
+  status          ProjectStatus           @default(DRAFT)
+  isPublic        Boolean                 @default(false)
+  submissions     ProjectSubmission[]
+  reviews         ProjectReview[]
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+  submittedAt     DateTime?
+
+  @@index([hackathonId, status])
+  @@index([submittedBy])
+}
+
+model HackathonTeamMember {
+  id          String            @id @default(cuid())
+  projectId   String
+  project     HackathonProject  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User              @relation(fields: [userId], references: [id])
+  role        TeamRole          @default(MEMBER)
+  joinedAt    DateTime          @default(now())
+
+  @@unique([projectId, userId])
+}
+
+model ProjectSubmission {
+  id              String            @id @default(cuid())
+  projectId       String
+  project         HackathonProject  @relation(fields: [projectId], references: [id])
+  version         Int               @default(1)
+  submissionNotes String            @db.Text
+  submissionUrl   String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([projectId])
+}
+
+model ProjectReview {
+  id              String            @id @default(cuid())
+  projectId       String
+  project         HackathonProject  @relation(fields: [projectId], references: [id])
+  judgeId         String
+  judge           User              @relation(fields: [judgeId], references: [id])
+  criteriaScores  Json
+  totalScore      Float
+  feedback        String            @db.Text
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@unique([projectId, judgeId])
+}
+
+model HackathonJudge {
+  id          String    @id @default(cuid())
+  hackathonId String
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  isLead      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  @@unique([hackathonId, userId])
+}
+
+model HackathonParticipant {
+  id          String    @id @default(cuid())
+  hackathonId String
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  registeredAt DateTime @default(now())
+
+  @@unique([hackathonId, userId])
+}
+
+model PrizeDistribution {
+  id          String            @id @default(cuid())
+  hackathonId String
+  hackathon   Hackathon         @relation(fields: [hackathonId], references: [id])
+  rank        Int
+  prizeXLM    Float
+  projectId   String?
+  project     HackathonProject? @relation(fields: [projectId], references: [id])
+  paidOut     Boolean           @default(false)
+  txHash      String?
+  createdAt   DateTime          @default(now())
+  paidAt      DateTime?
+
+  @@index([hackathonId, rank])
+}
+
+enum HackathonStatus {
+  DRAFT
+  PUBLISHED
+  REGISTRATION_CLOSED
+  SUBMISSION_OPEN
+  SUBMISSION_CLOSED
+  VOTING_OPEN
+  VOTING_CLOSED
+  WINNERS_ANNOUNCED
+  CANCELLED
+}
+
+enum ProjectStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  REVIEWED
+  WITHDRAWN
+  DISQUALIFIED
+}
+
+enum TeamRole {
+  LEAD
+  MEMBER
 }
