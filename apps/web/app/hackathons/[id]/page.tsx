@@ -86,7 +86,7 @@ export default function HackathonDetailPage({ params }: { params: { id: string }
       submissionEnd: '2024-02-15T23:59:59Z',
       votingStart: '2024-02-16T00:00:00Z',
       votingEnd: '2024-02-23T23:59:59Z',
-      maxParticipants: null,
+      maxParticipants: undefined as any,
       maxTeamSize: 5,
       allowTeamProjects: true,
       requireRegistration: true,

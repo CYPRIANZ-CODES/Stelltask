@@ -1,9 +1,12 @@
-import { ArrowRight, Wallet } from 'lucide-react';
-import GlobeAnimation from '@/components/GlobeAnimation';
+import { ArrowRight } from 'lucide-react';
+import AboutSlider from '@/components/AboutSlider';
 
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-[var(--bg-page)] text-[var(--text-main)]">
+      {/* Fixed dimming overlay behind header */}
+      <div className="fixed top-0 left-0 right-0 h-28 z-[90] pointer-events-none bg-gradient-to-b from-[var(--bg-page)] via-[var(--bg-page)]/80 to-transparent" />
+
       <section className="relative min-h-screen overflow-hidden">
         <div className="absolute inset-0 bg-[var(--bg-page)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,79,255,0.18),transparent_28%)] pointer-events-none dark-only" />
@@ -50,12 +53,14 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[2rem] border border-[var(--text-main)]/10 bg-[var(--bg-page)]/90 shadow-2xl shadow-violet-900/20">
+            <div className="relative flex flex-col overflow-hidden rounded-[2rem] border border-[var(--text-main)]/10 bg-[var(--bg-page)]/90 shadow-2xl shadow-violet-900/20 min-h-[400px] md:min-h-[480px]">
               <div className="absolute inset-0 bg-[var(--text-main)]/10" />
-              <GlobeAnimation />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--bg-page)] to-transparent px-6 py-5 text-[var(--text-muted)]">
-                <div className="text-xs uppercase tracking-[0.35em] text-[var(--text-muted)]">Network growth</div>
-                <p className="mt-2 text-lg font-semibold text-[var(--text-main)]">Scaled community funding, visualized.</p>
+              <div className="flex-1 flex items-center">
+                <AboutSlider />
+              </div>
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--bg-page)] via-[var(--bg-page)]/95 to-transparent px-6 py-5 pointer-events-none">
+                <div className="text-xs uppercase tracking-[0.35em] text-[var(--text-muted)]">About Stelltask</div>
+                <p className="mt-1 text-sm md:text-base font-semibold text-[var(--text-main)]">The open-source funding layer on Stellar.</p>
               </div>
             </div>
           </div>

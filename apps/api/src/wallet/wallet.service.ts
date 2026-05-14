@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
-import { Keypair, StrKey } from '@stellar-sdk/stellar-sdk';
+import { Keypair, StrKey } from '@stellar/stellar-sdk';
 
 @Injectable()
 export class WalletService {

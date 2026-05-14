@@ -10,17 +10,18 @@
     "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
-    "stellar-sdk": "^12.0.0",
-    "@stellar/stellar-sdk": "^12.0.0",
-    "@stellar/stellar-base": "^12.0.0",
     "@noble/curves": "^1.4.0",
     "@noble/hashes": "^1.4.0",
+    "@stellar/stellar-base": "^12.0.0",
+    "@stellar/stellar-sdk": "^12.0.0",
+    "stellar-sdk": "^12.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "typescript": "^5.4.0",
     "@types/node": "^20.11.0",
+    "@types/urijs": "^1.19.26",
     "@types/uuid": "^9.0.8",
-    "eslint": "^8.57.0"
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.0"
   }
 }

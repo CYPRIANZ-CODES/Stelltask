@@ -42,6 +42,9 @@ Thumbs.db
 # Next.js
 .next/
 
+# Turborepo
+.turbo/
+
 # Misc
 *.pem
 npm-debug.log*

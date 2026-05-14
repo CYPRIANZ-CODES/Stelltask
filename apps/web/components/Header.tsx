@@ -10,6 +10,7 @@ export default function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isExplore = pathname?.startsWith('/explore');
+  if (pathname?.startsWith('/docs')) return null;
 
   const features = [
     { name: 'Projects', href: '/explore' },
@@ -19,7 +20,7 @@ export default function Header() {
   ];
 
   return (
-    <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+    <div className="fixed top-6 left-0 right-0 z-[100] flex justify-center px-4">
       <header className="flex h-16 w-full max-w-6xl items-center justify-between rounded-tl-[2rem] rounded-tr-none rounded-br-[2rem] rounded-bl-none border border-[var(--text-main)]/10 bg-[var(--bg-page)]/80 px-8 backdrop-blur-xl shadow-2xl transition-all hover:bg-[var(--bg-page)]/90">
         <div className="flex items-center gap-3">
           <a href="/" className="flex items-center gap-3">

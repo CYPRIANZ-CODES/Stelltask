@@ -52,17 +52,18 @@ export default function RootLayout({
             <div>
               <h4 className="text-[var(--text-main)]/80 font-medium mb-4 text-sm">Resources</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="https://docs.stelltask.io" className="hover:text-[var(--text-main)] transition-colors">Documentation</a></li>
+                <li><a href="/docs" className="hover:text-[var(--text-main)] transition-colors">Documentation</a></li>
                 <li><a href="https://github.com/stelltask" className="hover:text-[var(--text-main)] transition-colors">GitHub</a></li>
                 <li><a href="https://stellar.org" className="hover:text-[var(--text-main)] transition-colors">Stellar</a></li>
               </ul>
             </div>
           </div>
-          <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-[var(--text-main)]/10 flex justify-between items-center text-xs">
-            <p>© 2026 stelltask. All rights reserved.</p>
+          <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-[var(--text-main)]/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
+            <p>&copy; 2026 stelltask. All rights reserved.</p>
             <div className="flex gap-6">
-              <a href="/terms" className="hover:text-[var(--text-main)] transition-colors">Terms</a>
-              <a href="/privacy" className="hover:text-[var(--text-main)] transition-colors">Privacy</a>
+              <a href="/docs/terms" className="hover:text-[var(--text-main)] transition-colors">Terms</a>
+              <a href="/docs/privacy" className="hover:text-[var(--text-main)] transition-colors">Privacy</a>
+              <a href="/docs" className="hover:text-[var(--text-main)] transition-colors">Docs</a>
             </div>
           </div>
         </footer>
